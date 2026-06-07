@@ -1,0 +1,690 @@
+/**
+ * Google Form generator for Sarvam TTS manual audio review.
+ *
+ * Usage:
+ * 1. Open https://script.google.com/
+ * 2. Create a new Apps Script project.
+ * 3. Paste this whole file.
+ * 4. Run createSarvamReviewForm().
+ * 5. Approve permissions. The form URL is printed in the execution log.
+ */
+
+const REVIEW_CLIPS = [
+  {
+    "review_id": "R01",
+    "clip_id": "dpbp_jV4Pzz0Wz0Y_c0004_s000",
+    "language": "hi-IN",
+    "duration_s": 4.84,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8598530888557434,
+    "snr_db": 53.739003176571096,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "तार्किक रूप से मेरे ख्याल से ये दोनों ही व्यक्ति गलतफहमी के शिकार हैं।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_jV4Pzz0Wz0Y_c0004_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_jV4Pzz0Wz0Y_c0004_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R02",
+    "clip_id": "jV4Pzz0Wz0Y_c0019_s000",
+    "language": "hi-IN",
+    "duration_s": 6.2,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8637712001800537,
+    "snr_db": 53.16436126978306,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "जब तक साबित नहीं होगा कि ईश्वर नहीं है, हम मान के चलेंगे कि है। क्योंकि मानने से हमें मनोवैज्ञानिक फायदा होता है।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/jV4Pzz0Wz0Y_c0019_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/jV4Pzz0Wz0Y_c0019_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R03",
+    "clip_id": "dpbp_jV4Pzz0Wz0Y_c0034_s001",
+    "language": "hi-IN",
+    "duration_s": 11.46,
+    "emotion": "formal",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8674964904785156,
+    "snr_db": 53.36935769609564,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "में आपके प्रश्न का जवाब यह है।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_jV4Pzz0Wz0Y_c0034_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_jV4Pzz0Wz0Y_c0034_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R04",
+    "clip_id": "jV4Pzz0Wz0Y_c0027_s001",
+    "language": "hi-IN",
+    "duration_s": 5.1,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8724198937416077,
+    "snr_db": 37.30871416644717,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "تو پھر میں کیا دیکھوں گa, کو پرگمٹیک فیلوز فیلوز فیلوز فیلوز پرگمٹیزم کا مطلب ہے کہ جو ویہا بھاریٹ روز سے فیدھے میں ہوسکு مانیں گے.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/jV4Pzz0Wz0Y_c0027_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/jV4Pzz0Wz0Y_c0027_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R05",
+    "clip_id": "dpbp_jV4Pzz0Wz0Y_c0012_s000",
+    "language": "hi-IN",
+    "duration_s": 7.16,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8768386840820312,
+    "snr_db": 44.080219225482665,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "और जिन लोगों ने ईश्वर को साबित करने की कोशिश की है, मैंने उनके प्रमाण पढ़ लिए, उनके arguments पढ़ लिए, वो भी बहुत meaningful है नहीं।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_jV4Pzz0Wz0Y_c0012_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_jV4Pzz0Wz0Y_c0012_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R06",
+    "clip_id": "DafERYOvxEw_c0028_s000",
+    "language": "hi-IN",
+    "duration_s": 24.3,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9465239644050598,
+    "snr_db": 51.08424783944817,
+    "source_title": "कैसे अपनी ज़िंदगी को बेहतर बनाएँ",
+    "source_url": "https://www.youtube.com/watch?v=DafERYOvxEw",
+    "transcript": "या अपने घर के आस पास 3-4 गरीब बच्चों की पढ़ाई का खर्चा उठा लीजिए। उनसे हफ्ते में एक बार मिलते रहिए और आप पाएंगे आपके चेहरे पर पहले से ज्यादा चमक आनी शुरू हो गई है और आपको competition, परेशानी, वो जो नफरत का माहौल दिन भर होता है, इसको हरा दूं, उसको हरा दूं, इस सब से मुक्ति मिलने लगी है और आप अंदर से एक बेहतर इंसान बनने के process में आ रहे हैं।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/DafERYOvxEw_c0028_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/DafERYOvxEw_c0028_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R07",
+    "clip_id": "dpbp_a7TJzv_1icU_c0016_s000",
+    "language": "hi-IN",
+    "duration_s": 10.27,
+    "emotion": "formal",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9254922270774841,
+    "snr_db": 28.800898422392038,
+    "source_title": "Heart Anatomy",
+    "source_url": "https://www.youtube.com/watch?v=a7TJzv_1icU",
+    "transcript": "Vena Cava। Vena Cava को हम क्या कहते हैं? Sorry, महासिरा। Vena Cava को क्या कहेंगे? महासिरा। ये शरीर से blood को लेकर आता है। और ये क्या करता है? ये...",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_a7TJzv_1icU_c0016_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_a7TJzv_1icU_c0016_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R08",
+    "clip_id": "dpbp_a7TJzv_1icU_c0020_s000",
+    "language": "hi-IN",
+    "duration_s": 19.68,
+    "emotion": "formal",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9301192760467529,
+    "snr_db": 30.78118995182038,
+    "source_title": "Heart Anatomy",
+    "source_url": "https://www.youtube.com/watch?v=a7TJzv_1icU",
+    "transcript": "अब बताइए ये तो आ गया आपका नीलय में sorry अलिंद में किस side वाले left side वाले अलिंद में आ गया। जब ये left side वाले अलिंद में आएगा तो ये इसको क्या करेगा नीचे गिरा देगा जैसे आप देखिए ना मान लीजिए ये marker है। और ये मेरे इस पे है तो इसको छोड़ेंगे ऐसे नीचे गिर गया यहां पे क्योंकि valve ये किधर खुल रहा है?",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_a7TJzv_1icU_c0020_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_a7TJzv_1icU_c0020_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R09",
+    "clip_id": "DafERYOvxEw_c0026_s000",
+    "language": "hi-IN",
+    "duration_s": 28.3,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.9410485029220581,
+    "snr_db": 46.181280643042385,
+    "source_title": "कैसे अपनी ज़िंदगी को बेहतर बनाएँ",
+    "source_url": "https://www.youtube.com/watch?v=DafERYOvxEw",
+    "transcript": "اس نے میری پہلے گذاری شام سب سے یہ ہے کسی یہ ہوتے روگر کچھ ایسا کرییٹیو شاک پانلیزی ہے کتے میں این گھنٹا مستی سے گذار سکیں اس میں وہ کچھ بھی وہ فیلم دیکھنی سے لیکھ کر کبیتا لیکھنے تک پینٹین کرنے تک کچھ بھی وہ گانا ہو گانا سیھ سیگنگ سیگھے اسوں پر میں سیگھے تبلا بجانا سیگھے ہرمونیم سیگھے گیٹار سیگھے کچھ ایسا جو کر پہل وہ دو بھی جانے کا منکرے.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/DafERYOvxEw_c0026_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/DafERYOvxEw_c0026_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R10",
+    "clip_id": "a7TJzv_1icU_c0005_s001",
+    "language": "hi-IN",
+    "duration_s": 30.0,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.974993884563446,
+    "snr_db": 25.525738510007606,
+    "source_title": "Heart Anatomy",
+    "source_url": "https://www.youtube.com/watch?v=a7TJzv_1icU",
+    "transcript": "ویڈیگلس اور یہ رائٹ ویڈیگلس دونوں same بنتے حالکی حالکی ہم کو یہ کریفس سے دیکھنے میں نہیں لگر ہے کی same ہوگا آپ اپنے ایس آپ سے جب بنائیں گے تو same بنائیں یہ جو بائیہ νیلہ ہوتا ہے یہ موتا ہوتا ہے اس کی جو پراث ہوتی ہے یہ کافی موتی ہوتی ہے اب ہی یہ جو دائینا νیلہ ہوتا ہے اس کی پراث پتلی ہوتی ہے جیس مگہ سے یہ ہات لگتا ہے کی جو کا ہو گا ہے تو لڑھے جب بناتے ہیں نہ توی اس کو جھکا دیتے ہیں اس لیگر بڑ ہو جاتا ہے یہ ہو گیاں آپ کا نیلے آئیے بھی نیلے نیچلہ ہی.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/a7TJzv_1icU_c0005_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/a7TJzv_1icU_c0005_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R11",
+    "clip_id": "a7TJzv_1icU_c0019_s002",
+    "language": "hi-IN",
+    "duration_s": 26.3,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.9598733186721802,
+    "snr_db": 29.165975256947373,
+    "source_title": "Heart Anatomy",
+    "source_url": "https://www.youtube.com/watch?v=a7TJzv_1icU",
+    "transcript": "جو ہیڑھے میں بلٹ ہوتا ہے وہ کیا سیاتا ہے تو دیکھئے سریری سے جو بلٹ لیاتا ہے ہے نہ کہا یعنی سیرا لیکی ہوتا ہے اس بلٹ میں عکسیجن نہیں ہوتا ہے جیس بلٹ میں عکسیجن نہیں ہوتا ہے اسے ہم لو بلو کلور سے دیکھاتے نیلے رنگ سے تو چلی ہم نیلے رنگ کے مارکر کا پریوک کر رہے ایدھر سے بلٹ آیا ایدھر سے بلٹ آیا اب آپ بتایای اس بلٹ کو جانی کا کیول ایک ایر افتاکی یہاں سے بلٹ آ جائے گئے اس میں.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/a7TJzv_1icU_c0019_s002.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/a7TJzv_1icU_c0019_s002_raw.wav?download=true"
+  },
+  {
+    "review_id": "R12",
+    "clip_id": "a7TJzv_1icU_c0023_s010",
+    "language": "hi-IN",
+    "duration_s": 28.4,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.9213405251502991,
+    "snr_db": 32.346469883840946,
+    "source_title": "Heart Anatomy",
+    "source_url": "https://www.youtube.com/watch?v=a7TJzv_1icU",
+    "transcript": "بھائیہ آلیند دوسرا ہو گیا, بھائیہ نہیں لیتین ہو گیا, تیکیدھر سے بھی ہو گیا ہی سے آنے کا, پہیاں دیکھے دیاں سے, اور اگر بھائری ناس کو بھی لیجے گیا, تو چاکھ تھوی دار ہو جائے گیا, چاکھ تھوی دار ہو جائے گیا, تو دیرے دیرے ہمسان کیا بڑھا رہا ہے, پہلے آپ کو چاکھ چیمبر بتائیں, پھر چھے راستے بتائیں, اب آٹھ راستا دیکھیا, پہلا راستا, مہا سیرا, یا سبولڈ ہے محاسیرا پہلا داہینہ علیند دوسرا.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/a7TJzv_1icU_c0023_s010.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/a7TJzv_1icU_c0023_s010_raw.wav?download=true"
+  },
+  {
+    "review_id": "R13",
+    "clip_id": "dpbp_pyVLK891zrE_c0024_s000",
+    "language": "hi-IN",
+    "duration_s": 29.44,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9745281934738159,
+    "snr_db": 33.3992117530105,
+    "source_title": "Do It Yourself",
+    "source_url": "https://www.youtube.com/watch?v=pyVLK891zrE",
+    "transcript": "और तब मैंने खोजा कि मैं 1 लेखक हो सकता हूं। मैंने UPSC की तैयारी के दौरान देश दुनिया को पढ़ा, सामाजिक समस्याओं को पढ़ा, आर्थिक नीतियों को पढ़ा, उसका विश्लेषण करता हूं, उसको लिखता हूं। तो मैं मैं कहानियां क्यों नहीं लिख सकता हूं? और मैंने 1 कहानी लिखी UPSC के ही तैयारी करने वाले लोगों की जिंदगी पर Dark Horse नाम की। और यहां से मेरा अलग तरह का संघर्ष शुरू हुआ कि मैंने जब किताब लिख ली मात्र 9 दिनों में, मुझे इतनी हड़बड़ी थी कुछ हो जाने की।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_pyVLK891zrE_c0024_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_pyVLK891zrE_c0024_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R14",
+    "clip_id": "dpbp_pyVLK891zrE_c0040_s000",
+    "language": "hi-IN",
+    "duration_s": 28.38,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9654945731163025,
+    "snr_db": 35.96957224280066,
+    "source_title": "Do It Yourself",
+    "source_url": "https://www.youtube.com/watch?v=pyVLK891zrE",
+    "transcript": "यहां से हम लोग को ये सोचना होगा कि हमें अपनी यात्रा सजग होकर धैर्य के साथ करनी है और ये बिल्कुल नहीं सोचना है क्योंकि आपके आसपास जरूरी नहीं है कि वैसे ही लोग हो जो आपको प्रोत्साहित करें। कई बार अब तो social media का दौर है। हर एक post, हर एक विचार के बाद हतोत्साहित करने वालों की एक फौज है लेकिन प्रोत्साहित करने वालों का भी एक समूह है। ऐसे समय में जहां सब कुछ अराजक दिखता है, यहां सुख और उत्सव भी अराजक दिखता है।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_pyVLK891zrE_c0040_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_pyVLK891zrE_c0040_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R15",
+    "clip_id": "DafERYOvxEw_c0025_s003",
+    "language": "hi-IN",
+    "duration_s": 5.56,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.856330931186676,
+    "snr_db": 44.25141400115764,
+    "source_title": "कैसे अपनी ज़िंदगी को बेहतर बनाएँ",
+    "source_url": "https://www.youtube.com/watch?v=DafERYOvxEw",
+    "transcript": "و جس نے اپنے کیڈیوڑی کو ہی ماردیا صرف وہ باد مشین سلکا ہے کہ انسان.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/DafERYOvxEw_c0025_s003.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/DafERYOvxEw_c0025_s003_raw.wav?download=true"
+  },
+  {
+    "review_id": "R16",
+    "clip_id": "DafERYOvxEw_c0034_s000",
+    "language": "hi-IN",
+    "duration_s": 10.7,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.870120108127594,
+    "snr_db": 41.59913111236523,
+    "source_title": "कैसे अपनी ज़िंदगी को बेहतर बनाएँ",
+    "source_url": "https://www.youtube.com/watch?v=DafERYOvxEw",
+    "transcript": "انسان کو انسان بنے رہےنے کے لیکن سے کم دو دین ایسے رشتے چاہی ہوتی جہا وہ پوری طرح سے صحاج بھو کرنا ایسے جہاں اس کو پڑا نہ لگا نہ پڑے.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/DafERYOvxEw_c0034_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/DafERYOvxEw_c0034_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R17",
+    "clip_id": "pyVLK891zrE_c0032_s000",
+    "language": "hi-IN",
+    "duration_s": 23.4,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.8766603469848633,
+    "snr_db": 34.294826487379446,
+    "source_title": "Do It Yourself",
+    "source_url": "https://www.youtube.com/watch?v=pyVLK891zrE",
+    "transcript": "¡Where are you folks? کی deal yet? How do you feel, how are you feeling? Did you see that gap? You can talk about the happiness of your relative. I was slvär to death. I nodded into it and did some of the เฮ YATRA from the back? My parents reasoned me.. because my mother would appeared without her.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/pyVLK891zrE_c0032_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/pyVLK891zrE_c0032_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R18",
+    "clip_id": "dpbp_pyVLK891zrE_c0010_s000",
+    "language": "hi-IN",
+    "duration_s": 16.82,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.8776015043258667,
+    "snr_db": 37.366252118202496,
+    "source_title": "Do It Yourself",
+    "source_url": "https://www.youtube.com/watch?v=pyVLK891zrE",
+    "transcript": "और अगर पहले बन गए तो बाद में कर लेना लेकिन पढ़ना NCERT एक बार। मनोरमा Year Book एक बार पढ़ना जरूर। है ना? तो मेरा भी वही था। मैं भी घर से जब BA हो गया रांची संजीवस कॉलेज से उसके बाद मैंने पूछा घर वाले से क्या? उन्होंने कहा पूछना क्या है निकलो।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_pyVLK891zrE_c0010_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_pyVLK891zrE_c0010_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R19",
+    "clip_id": "pyVLK891zrE_c0026_s000",
+    "language": "hi-IN",
+    "duration_s": 18.9,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.8803155422210693,
+    "snr_db": 33.69151681469754,
+    "source_title": "Do It Yourself",
+    "source_url": "https://www.youtube.com/watch?v=pyVLK891zrE",
+    "transcript": "پکھنے اور تپنے میں انتر ہے ہم سفضابالیوں کے ہیر فیر میں کئیوار جندگی کا راستائے دوروڑر کر دیتے ہیں مجھے پتا چلگی آئی پکھنا نہیں تپنا ہے جو تپے گا وہ دمکے گا وہ چھمکے گا اور جو پکے گا وہ چوص لیا جا گا جس لیکھ تپنے پر دھانگی جے گا اور سندھ ہرس میں جو کتاب ہوتا ہے وہ آپ کو تپاتا ہے.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/pyVLK891zrE_c0026_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/pyVLK891zrE_c0026_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R20",
+    "clip_id": "dpbp_DafERYOvxEw_c0046_s000",
+    "language": "hi-IN",
+    "duration_s": 14.8,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8934409022331238,
+    "snr_db": 42.7375314714847,
+    "source_title": "कैसे अपनी ज़िंदगी को बेहतर बनाएँ",
+    "source_url": "https://www.youtube.com/watch?v=DafERYOvxEw",
+    "transcript": "अगर वो नहीं मिलता time, तो घर पे या office पे कुछ आधा घंटा निकालिए, कागज pen लेके बैठिए, कुछ points note कीजिए और रोज सोचिए कि आज का दिन मेरी जिंदगी को किस तरह से contribute करता है, अगर करता है या नहीं करता।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_DafERYOvxEw_c0046_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_DafERYOvxEw_c0046_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R21",
+    "clip_id": "Ju9ONXG-KdA_c0018_s000",
+    "language": "en-IN",
+    "duration_s": 28.6,
+    "emotion": "excited",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9809083342552185,
+    "snr_db": 54.0272781046794,
+    "source_title": "Courage to begin",
+    "source_url": "https://www.youtube.com/watch?v=Ju9ONXG-KdA",
+    "transcript": "English is not only about learning grammar, vocabulary or watching random videos on YouTube. If you are doing that, then let me tell you you are doing the wrong thing. English is the game of mindset plus skill set. Now, what is the mindset? The theme of our today's talk, courage to begin, because courage is always important than content. Yes or no, All of you, you have to create that mindset.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/Ju9ONXG-KdA_c0018_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/Ju9ONXG-KdA_c0018_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R22",
+    "clip_id": "dpbp_9Q7Zl3OI4us_c0034_s001",
+    "language": "en-IN",
+    "duration_s": 23.38,
+    "emotion": "sarcastic",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9487510323524475,
+    "snr_db": 40.86008782364944,
+    "source_title": "The 3 Myths of the Indian Education System",
+    "source_url": "https://www.youtube.com/watch?v=9Q7Zl3OI4us",
+    "transcript": "kids in an education system which is actively holding them at bay. Because I don't know about you, I would like to live in a future. A future where I walk into a class and I ask them, so how many of you woke up today morning and decided to learn something new? And instead of five hands going up, I'd like to have at least six hands going up. Thank you.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_9Q7Zl3OI4us_c0034_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_9Q7Zl3OI4us_c0034_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R23",
+    "clip_id": "9Q7Zl3OI4us_c0007_s000",
+    "language": "en-IN",
+    "duration_s": 26.1,
+    "emotion": "sarcastic",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9715206623077393,
+    "snr_db": 38.515734048901756,
+    "source_title": "The 3 Myths of the Indian Education System",
+    "source_url": "https://www.youtube.com/watch?v=9Q7Zl3OI4us",
+    "transcript": "But then what else is education good for? And I got my answer, a lot of people say this, it is to create the best minds in their respective fields. So, and I think that's not far from the truth. I had an opportunity to speak to Dr. Jan C. James. She's the former Vice-Chancellor of Mahatma Gandhi University. She said, and I quote, the best in India will always be the best in the world when it comes to education.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/9Q7Zl3OI4us_c0007_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/9Q7Zl3OI4us_c0007_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R24",
+    "clip_id": "9Q7Zl3OI4us_c0021_s000",
+    "language": "en-IN",
+    "duration_s": 29.7,
+    "emotion": "sarcastic",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9707288146018982,
+    "snr_db": 38.742088906923854,
+    "source_title": "The 3 Myths of the Indian Education System",
+    "source_url": "https://www.youtube.com/watch?v=9Q7Zl3OI4us",
+    "transcript": "And two, this is a question a lot of people ask, why am I studying differentiation? Why am I studying integration? What is the point of this? So, but that's the thing with our syllabus. Unless a teacher tells you, you're not going to find out what it's used for. Ask any student whether they fully understand why they are studying, what they're studying. They really don't know. In most of them, at least, unless, like I said, or, and this is a day and age when you can access anything on the internet, as clearly shown.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/9Q7Zl3OI4us_c0021_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/9Q7Zl3OI4us_c0021_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R25",
+    "clip_id": "9Q7Zl3OI4us_c0021_s001",
+    "language": "en-IN",
+    "duration_s": 26.3,
+    "emotion": "sarcastic",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9494704008102417,
+    "snr_db": 39.44330765823979,
+    "source_title": "The 3 Myths of the Indian Education System",
+    "source_url": "https://www.youtube.com/watch?v=9Q7Zl3OI4us",
+    "transcript": "But then, yes, I'm not, don't get me wrong. I do believe that memorizing a few things is important because that's what education system is about, right? Memorizing. It's not about understanding. It's about how good you remember things. Well, then that has its disadvantage as well. Just memorizing and not fully understanding. So for this, I have to tell you a bit about my college. So I teach in an engineering college. An engineering is a four-year undergraduate degree.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/9Q7Zl3OI4us_c0021_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/9Q7Zl3OI4us_c0021_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R26",
+    "clip_id": "9Q7Zl3OI4us_c0029_s000",
+    "language": "en-IN",
+    "duration_s": 28.6,
+    "emotion": "sarcastic",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9459391236305237,
+    "snr_db": 40.812392475603815,
+    "source_title": "The 3 Myths of the Indian Education System",
+    "source_url": "https://www.youtube.com/watch?v=9Q7Zl3OI4us",
+    "transcript": "So, it's about making a mistake. And then learning from it and making another mistake and then learning from that and so on and so forth until maybe if you get it right. Without any formal education in arts, the kids won't have anywhere to go. In fact, I have a student. I have a student who in order to impress a girl in his class learned a song in the shortest duration of time. That is how creative kids can get. depending on rewards of course.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/9Q7Zl3OI4us_c0029_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/9Q7Zl3OI4us_c0029_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R27",
+    "clip_id": "B9dm0PC0_b8_c0023_s000",
+    "language": "en-IN",
+    "duration_s": 29.0,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9715620279312134,
+    "snr_db": 44.04333535962266,
+    "source_title": "Broken English",
+    "source_url": "https://www.youtube.com/watch?v=B9dm0PC0_b8",
+    "transcript": "The truth is, there are no superheroes. There's just us. We are the ones that we have been waiting for. So the third and final lesson that I'd love to share with you is that there are critical moments in your life where you have to make a decision about who you are. And in those moments, let your heart guide you. It was 2012. I had graduated from Stanford. I had an offer to join McKinsey and Company, which was a dream job for any Stanford graduate.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/B9dm0PC0_b8_c0023_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/B9dm0PC0_b8_c0023_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R28",
+    "clip_id": "Ju9ONXG-KdA_c0004_s000",
+    "language": "en-IN",
+    "duration_s": 28.6,
+    "emotion": "concerned",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9616507291793823,
+    "snr_db": 55.50401162545028,
+    "source_title": "Courage to begin",
+    "source_url": "https://www.youtube.com/watch?v=Ju9ONXG-KdA",
+    "transcript": "His child often seen him talking and saying to his colleagues, my son, full in English, my son, full in English. One day that child curiously asked, Papa, why do you say this again and again? Don't you know I am a student of Gujarati medium? Even there is no any English medium school in the entire Thaisil. How could you say that?",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/Ju9ONXG-KdA_c0004_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/Ju9ONXG-KdA_c0004_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R29",
+    "clip_id": "Ju9ONXG-KdA_c0013_s002",
+    "language": "en-IN",
+    "duration_s": 28.1,
+    "emotion": "excited",
+    "style": "expressive",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.9365576505661011,
+    "snr_db": 54.22587228662064,
+    "source_title": "Courage to begin",
+    "source_url": "https://www.youtube.com/watch?v=Ju9ONXG-KdA",
+    "transcript": "So I joined him in his institute. I started to work part time. And in that period, around about five to six years, I have read a lot of books. I have read more than 50 plus autobiographies. I have read many self-help books. And I have taught all the standard of students for second, third, fourth, fifth, sixth, seventh, eighth, ninth, ninth, and 11, 12 science, physics, everything, okay. And...",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/Ju9ONXG-KdA_c0013_s002.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/Ju9ONXG-KdA_c0013_s002_raw.wav?download=true"
+  },
+  {
+    "review_id": "R30",
+    "clip_id": "Ju9ONXG-KdA_c0014_s001",
+    "language": "en-IN",
+    "duration_s": 26.6,
+    "emotion": "excited",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9481908679008484,
+    "snr_db": 55.0217630991382,
+    "source_title": "Courage to begin",
+    "source_url": "https://www.youtube.com/watch?v=Ju9ONXG-KdA",
+    "transcript": "But in just two years, the thing is that when the pandemic came, me and my brother, we were worthless. Because in that situation, the education field, it was totally, I would say, a disaster at that time. Okay. I was not able to take my offline sessions. We were not able to take our courses in our institute, the school was closed. And, I remember 21st April.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/Ju9ONXG-KdA_c0014_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/Ju9ONXG-KdA_c0014_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R31",
+    "clip_id": "Ju9ONXG-KdA_c0016_s005",
+    "language": "en-IN",
+    "duration_s": 26.7,
+    "emotion": "excited",
+    "style": "expressive",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9241951107978821,
+    "snr_db": 55.52868136449267,
+    "source_title": "Courage to begin",
+    "source_url": "https://www.youtube.com/watch?v=Ju9ONXG-KdA",
+    "transcript": "My dear friends, for some people, English is piece of cake, it is just a language, but I am telling you, for many of the people, it is not the same. English causes insults because of English people don't get the job hikes, because of English people live in that under-confident state and I decided.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/Ju9ONXG-KdA_c0016_s005.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/Ju9ONXG-KdA_c0016_s005_raw.wav?download=true"
+  },
+  {
+    "review_id": "R32",
+    "clip_id": "SAc_Z4qAs3E_c0007_s000",
+    "language": "en-IN",
+    "duration_s": 29.6,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": false,
+    "ecapa_similarity": 0.9376415014266968,
+    "snr_db": 40.64343089750502,
+    "source_title": "Be the CEO of your own life",
+    "source_url": "https://www.youtube.com/watch?v=SAc_Z4qAs3E",
+    "transcript": "Our instructor told me in a crisp tone, Sani Alji, Yaabe Mahilao ke liya laksa training nehi hoti. Meaning that I had to do every single bit of activity which my other male colleagues had to do. Well, fair enough. And so it began. Rackling down hills, riding horses, handling guns, lobbing grenades. But by God it was not easy.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/SAc_Z4qAs3E_c0007_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/SAc_Z4qAs3E_c0007_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R33",
+    "clip_id": "XSXq8CRKAtQ_c0001_s003",
+    "language": "en-IN",
+    "duration_s": 26.7,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9373503923416138,
+    "snr_db": 28.236127516937245,
+    "source_title": "Geography NCERT",
+    "source_url": "https://www.youtube.com/watch?v=XSXq8CRKAtQ",
+    "transcript": "Geo means earth and graphose means description, so it is the description of earth that we are trying to understand in geography. Now geography has many disciplines like natural science and social science. Under natural sciences we have geology, pedology, oceanography, botany, zoology, meteorology etc. And under social science we have economics, history, sociology, political science, anthropology etc.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/XSXq8CRKAtQ_c0001_s003.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/XSXq8CRKAtQ_c0001_s003_raw.wav?download=true"
+  },
+  {
+    "review_id": "R34",
+    "clip_id": "XSXq8CRKAtQ_c0002_s011",
+    "language": "en-IN",
+    "duration_s": 27.2,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9106830358505249,
+    "snr_db": 29.599898897168867,
+    "source_title": "Geography NCERT",
+    "source_url": "https://www.youtube.com/watch?v=XSXq8CRKAtQ",
+    "transcript": "So this is the physical aspect of geography and here is the human aspect of geography. Now there is this another branch called biogeography. So in this we are basically talking about plant and animal geography. So in other words we call it as botany and zoology. Now the interesting part about this is that biogeography lies in between physical and human geography. It's like an interface. And one of the reason that you can think of it is.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/XSXq8CRKAtQ_c0002_s011.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/XSXq8CRKAtQ_c0002_s011_raw.wav?download=true"
+  },
+  {
+    "review_id": "R35",
+    "clip_id": "dpbp_B9dm0PC0_b8_c0021_s000",
+    "language": "en-IN",
+    "duration_s": 25.28,
+    "emotion": "neutral",
+    "style": "conversational",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.970753014087677,
+    "snr_db": 42.78979755580873,
+    "source_title": "Broken English",
+    "source_url": "https://www.youtube.com/watch?v=B9dm0PC0_b8",
+    "transcript": "And that's what I did. It was one of the most profoundly moving experiences of my life. And the girl who I arranged all of this for was no other than eleven-year-old Malala. What this taught me was that anything I wanted to change, I had the power to effect. Sitting in my dorm room at Stanford, sipping my jamba juice, I had found a way to effect the life of a girl in the Swat Valley.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_B9dm0PC0_b8_c0021_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_B9dm0PC0_b8_c0021_s000_raw.wav?download=true"
+  },
+  {
+    "review_id": "R36",
+    "clip_id": "dpbp_XSXq8CRKAtQ_c0001_s001",
+    "language": "en-IN",
+    "duration_s": 29.5,
+    "emotion": "formal",
+    "style": "authoritative",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.9531042575836182,
+    "snr_db": 25.393921654778243,
+    "source_title": "Geography NCERT",
+    "source_url": "https://www.youtube.com/watch?v=XSXq8CRKAtQ",
+    "transcript": "Now in human society, we have variations in terms of social and cultural form. We have people belonging to different community, different background with different beliefs. So it is really interesting to see the relationship between the physical environment and social or cultural features. from poetic point of view, we can say physical environment is like a stage, and human societies are the actors performing. Now try to relate this. You go to different places, you witness new culture.",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_XSXq8CRKAtQ_c0001_s001.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_XSXq8CRKAtQ_c0001_s001_raw.wav?download=true"
+  },
+  {
+    "review_id": "R37",
+    "clip_id": "dpbp_jV4Pzz0Wz0Y_c0025_s000",
+    "language": "hi-IN",
+    "duration_s": 8.08,
+    "emotion": "concerned",
+    "style": "formal",
+    "emotion_review_required": true,
+    "ecapa_similarity": 0.8904159069061279,
+    "snr_db": 60.4325064199998,
+    "source_title": "Vikas Divyakirti | Drishtikon",
+    "source_url": "https://www.youtube.com/watch?v=jV4Pzz0Wz0Y",
+    "transcript": "नहीं है और मान लिया तो कोई नुकसान की बात नहीं है। तो Cost Benefit Analysis में ईश्वर को मानना बेहतर बात है, तो मान लेते हैं, उसने माना।",
+    "final_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/final/dpbp_jV4Pzz0Wz0Y_c0025_s000.wav?download=true",
+    "raw_before_audio_url": "https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min/resolve/main/review_form_37/raw/dpbp_jV4Pzz0Wz0Y_c0025_s000_raw.wav?download=true"
+  }
+];
+
+function addChoiceQuestion(form, title, choices, required) {
+  const item = form.addMultipleChoiceItem();
+  item.setTitle(title);
+  item.setChoiceValues(choices);
+  item.setRequired(required);
+  return item;
+}
+
+function createSarvamReviewForm() {
+  const form = FormApp.create('Sarvam TTS Manual Review - 37 Clips');
+  form.setDescription(
+    'Manual quality review for 37 clips from the Sarvam Indian TTS dataset. ' +
+    'Open each public audio link, listen to the final clip, optionally compare with raw-before audio, then answer the questions.'
+  );
+  form.setCollectEmail(false);
+  form.setProgressBar(true);
+  form.setLimitOneResponsePerUser(false);
+
+  REVIEW_CLIPS.forEach((clip, index) => {
+    form.addPageBreakItem()
+      .setTitle(`${clip.review_id} - ${clip.language} - ${clip.duration_s}s`)
+      .setHelpText(
+        `Final audio: ${clip.final_audio_url}\n` +
+        `Raw before audio: ${clip.raw_before_audio_url}\n` +
+        `Source: ${clip.source_title}\n${clip.source_url}\n` +
+        `Pipeline label: ${clip.emotion} / ${clip.style}\n` +
+        `Transcript: ${clip.transcript}`
+      );
+
+    addChoiceQuestion(form, `${clip.review_id} Q1 - Audio clarity`, [
+      '5 - Studio quality / very clean',
+      '4 - Clean, minor room tone only',
+      '3 - Acceptable, minor issues',
+      '2 - Noticeable noise, distracting',
+      '1 - Heavy noise/music bleed, unusable'
+    ], true);
+
+    addChoiceQuestion(form, `${clip.review_id} Q2 - Speaker consistency`, [
+      'Yes, clearly one speaker',
+      'Mostly one speaker, brief overlap at boundary',
+      'No, two or more speakers audible'
+    ], true);
+
+    addChoiceQuestion(form, `${clip.review_id} Q3 - Boundary quality`, [
+      'Clean start and clean end',
+      'One side is cut',
+      'Both sides are cut mid-sentence',
+      'Unnatural abrupt cut with click/pop'
+    ], true);
+
+    addChoiceQuestion(form, `${clip.review_id} Q4 - Speech naturalness`, [
+      'Natural spontaneous speech',
+      'Slightly read/scripted but acceptable',
+      'Clearly read aloud/audiobook-style',
+      'Synthetic or heavily processed voice'
+    ], true);
+
+    addChoiceQuestion(form, `${clip.review_id} Q5 - Dominant emotion/register`, [
+      'Neutral / informational',
+      'Happy / excited',
+      'Sad / somber',
+      'Angry / frustrated',
+      'Formal / authoritative',
+      'Conversational / casual',
+      'Expressive / dramatic',
+      'Cannot determine'
+    ], true);
+
+    addChoiceQuestion(form, `${clip.review_id} Q6 - Final decision`, [
+      'Keep',
+      'Keep after trimming boundary',
+      'Reject',
+      'Unsure / needs second reviewer'
+    ], true);
+
+    form.addParagraphTextItem()
+      .setTitle(`${clip.review_id} Notes`)
+      .setHelpText('Optional: mention noise, language mismatch, bad boundary, wrong emotion, or transcript issue.')
+      .setRequired(false);
+  });
+
+  Logger.log('Edit URL: ' + form.getEditUrl());
+  Logger.log('Public response URL: ' + form.getPublishedUrl());
+}

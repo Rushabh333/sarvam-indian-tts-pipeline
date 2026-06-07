@@ -82,3 +82,4 @@ youtube_cookies.txt
 
 # Packaged exports are regenerated locally and should not be source controlled.
 packaged_artifacts/*.zip
+review_form/public_upload/
