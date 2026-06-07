@@ -63,21 +63,27 @@ Emotion/style status & Heuristic v2 with confidence/evidence \\
 \end{tabular}
 \end{table}
 
-\noindent The primary artifacts are:
+\noindent Public deliverables:
 \begin{itemize}
-    \item \href{run:../data/metadata/10_final.jsonl}{\texttt{data/metadata/10\_final.jsonl}}: final clip metadata.
-    \item \href{run:../analysis/before_after_manual_review.csv}{\texttt{analysis/before\_after\_manual\_review.csv}}: manual review sheet for raw/final clip pairs.
-    \item \href{run:../analysis/before_after_metrics/before_after_report.md}{\texttt{analysis/before\_after\_metrics/before\_after\_report.md}}: audio before/after metrics.
-    \item \href{run:../analysis/before_after_metrics/transcript_report.md}{\texttt{analysis/before\_after\_metrics/transcript\_report.md}}: transcript coverage and preservation metrics.
-    \item \href{run:../analysis/emotion_tag_repair/emotion_tag_repair_report.md}{\texttt{analysis/emotion\_tag\_repair/emotion\_tag\_repair\_report.md}}: emotion tag repair report.
-    \item \href{run:../packaged_artifacts/sarvam_code_methods_results_no_audio.zip}{\texttt{packaged\_artifacts/sarvam\_code\_methods\_results\_no\_audio.zip}}: code, methods, plots, and results without audio files.
+    \item HuggingFace dataset: \href{https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min}{\texttt{Rushabh3/sarvam-indian-tts-60min}}.
+    \item GitHub repository: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline}{\texttt{Rushabh333/sarvam-indian-tts-pipeline}}.
+    \item Final metadata is published through the HuggingFace dataset splits and documented in the GitHub repository.
+\end{itemize}
+
+\noindent The main public analysis artifacts in the repository are:
+\begin{itemize}
+    \item \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_manual_review.csv}{\texttt{analysis/before\_after\_manual\_review.csv}}: manual review sheet for raw/final clip pairs.
+    \item \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/before_after_report.md}{\texttt{analysis/before\_after\_metrics/before\_after\_report.md}}: audio before/after metrics.
+    \item \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/transcript_report.md}{\texttt{analysis/before\_after\_metrics/transcript\_report.md}}: transcript coverage and preservation metrics.
+    \item \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/emotion_tag_repair/emotion_tag_repair_report.md}{\texttt{analysis/emotion\_tag\_repair/emotion\_tag\_repair\_report.md}}: emotion tag repair report.
+    \item \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/report/final_report.pdf}{\texttt{report/final\_report.pdf}}: compiled PDF report.
 \end{itemize}
 
 \section{How the Pipeline Works}
 
 \subsection{Pipeline Stages}
 
-The pipeline is organized as a sequence of scripts under \href{run:../pipeline}{\texttt{pipeline/}}:
+The pipeline is organized as a sequence of scripts under \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/tree/main/pipeline}{\texttt{pipeline/}}:
 
 \begin{enumerate}
     \item \textbf{Source curation}: validates YouTube source metadata, expected language, speaker dominance, pre-listen quality, and prohibited source types.
@@ -115,7 +121,7 @@ This made it possible to compare before and after clips, diagnose failures, and 
 
 \subsection{Iteration 1: Initial Dataset}
 
-The first iteration produced clips, but manual and automated inspection showed that the dataset was not acceptable. It contained language mismatches, read/voiceover-like speech, and clips that looked clean by basic script but were not ideal for expressive TTS training. The archived audit is documented in \href{run:../archive_one/iteration_1_audit_and_pipeline_hardening.md}{\texttt{archive\_one/iteration\_1\_audit\_and\_pipeline\_hardening.md}}.
+The first iteration produced clips, but manual and automated inspection showed that the dataset was not acceptable. It contained language mismatches, read/voiceover-like speech, and clips that looked clean by basic script but were not ideal for expressive TTS training. The archived audit is documented in \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/archive_one/iteration_1_audit_and_pipeline_hardening.md}{\texttt{archive\_one/iteration\_1\_audit\_and\_pipeline\_hardening.md}}.
 
 \begin{table}[H]
 \centering
@@ -274,7 +280,7 @@ Hindi/code-mixed & 107 & 0.900 & 0.884 & 56 \\
 
 \subsection{Transcript Decision}
 
-The English preservation results are strong. The Hindi/code-mixed results are more complicated: many low-scoring rows show script instability in ASR output rather than obvious audio corruption. For this reason, I did not use the ASR similarity score as a hard rejection metric for Hindi. Instead, low-similarity rows are written to \href{run:../analysis/before_after_metrics/low_asr_similarity_review.csv}{\texttt{low\_asr\_similarity\_review.csv}} for manual review.
+The English preservation results are strong. The Hindi/code-mixed results are more complicated: many low-scoring rows show script instability in ASR output rather than obvious audio corruption. For this reason, I did not use the ASR similarity score as a hard rejection metric for Hindi. Instead, low-similarity rows are written to \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/low_asr_similarity_review.csv}{\texttt{low\_asr\_similarity\_review.csv}} for manual review.
 
 \section{Emotion and Style Tag Repair}
 
@@ -379,17 +385,18 @@ The final pipeline is useful because it produces a traceable, measurable, review
 The most important negative result is also valuable: the enhancement stage did not measurably improve audio quality in this run. That finding changed the interpretation of the pipeline from ``audio enhancement'' to ``dataset standardization and quality control.'' This is the kind of iteration that made the pipeline more honest and more production-ready.
 
 \appendix
-\section{Artifact Links}
+\section{Public Artifact Links}
 
 \begin{itemize}
-    \item Code and no-audio results archive: \href{run:../packaged_artifacts/sarvam_code_methods_results_no_audio.zip}{\texttt{packaged\_artifacts/sarvam\_code\_methods\_results\_no\_audio.zip}}
-    \item Final metadata: \href{run:../data/metadata/10_final.jsonl}{\texttt{data/metadata/10\_final.jsonl}}
-    \item Before/after metrics CSV: \href{run:../analysis/before_after_metrics/before_after_metrics.csv}{\texttt{analysis/before\_after\_metrics/before\_after\_metrics.csv}}
-    \item Transcript similarity CSV: \href{run:../analysis/before_after_metrics/asr_text_similarity.csv}{\texttt{analysis/before\_after\_metrics/asr\_text\_similarity.csv}}
-    \item Low transcript similarity review CSV: \href{run:../analysis/before_after_metrics/low_asr_similarity_review.csv}{\texttt{analysis/before\_after\_metrics/low\_asr\_similarity\_review.csv}}
-    \item Emotion review CSV: \href{run:../analysis/emotion_tag_repair/emotion_manual_review_v2.csv}{\texttt{analysis/emotion\_tag\_repair/emotion\_manual\_review\_v2.csv}}
-    \item Source list: \href{run:../sources/sources.jsonl}{\texttt{sources/sources.jsonl}}
-    \item Iteration 1 audit: \href{run:../docs/iteration_1_audit_and_pipeline_hardening.md}{\texttt{docs/iteration\_1\_audit\_and\_pipeline\_hardening.md}}
+    \item HuggingFace dataset: \href{https://huggingface.co/datasets/Rushabh3/sarvam-indian-tts-60min}{\texttt{Rushabh3/sarvam-indian-tts-60min}}
+    \item GitHub repository: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline}{\texttt{Rushabh333/sarvam-indian-tts-pipeline}}
+    \item Before/after metrics CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/before_after_metrics.csv}{\texttt{analysis/before\_after\_metrics/before\_after\_metrics.csv}}
+    \item Transcript similarity CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/asr_text_similarity.csv}{\texttt{analysis/before\_after\_metrics/asr\_text\_similarity.csv}}
+    \item Low transcript similarity review CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/low_asr_similarity_review.csv}{\texttt{analysis/before\_after\_metrics/low\_asr\_similarity\_review.csv}}
+    \item Emotion review CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/emotion_tag_repair/emotion_manual_review_v2.csv}{\texttt{analysis/emotion\_tag\_repair/emotion\_manual\_review\_v2.csv}}
+    \item Source list: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/sources/sources.jsonl}{\texttt{sources/sources.jsonl}}
+    \item Iteration 1 audit: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/docs/iteration_1_audit_and_pipeline_hardening.md}{\texttt{docs/iteration\_1\_audit\_and\_pipeline\_hardening.md}}
+    \item Final PDF report: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/report/final_report.pdf}{\texttt{report/final\_report.pdf}}
 \end{itemize}
 
 \end{document}
