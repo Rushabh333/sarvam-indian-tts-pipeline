@@ -333,6 +333,51 @@ Excited & 10 & & \\
     \caption{Emotion distribution before and after v2 repair. The repair reduced broad source-level over-assignment and moved lecture-like clips toward formal/authoritative labels.}
 \end{figure}
 
+\section{Manual Review Form}
+
+Because automated metrics do not fully capture TTS suitability, I also created a Google Form for human review of a 37-clip subset. The review set was selected to be language-balanced and source-diverse while still prioritizing rows that needed human attention: low ASR-similarity clips, lower speaker-similarity clips, and rows marked for emotion review. The form uses public HuggingFace audio links for both the final clip and its matched raw-before clip.
+
+\noindent Public review form:
+\begin{center}
+\href{https://docs.google.com/forms/d/e/1FAIpQLSdWRh_ek1CADZmEORGfKX47R4YiNFZ44hmqzWTBAdvha5qeEA/viewform}{\texttt{Sarvam TTS Manual Review - 37 Clips}}
+\end{center}
+
+\begin{table}[H]
+\centering
+\caption{Manual review subset}
+\begin{tabular}{lr}
+\toprule
+\textbf{Item} & \textbf{Value} \\
+\midrule
+Review clips & 37 \\
+Hindi/code-mixed review clips & 21 \\
+Indian English review clips & 16 \\
+Audio per clip & Final clip + matched raw-before clip \\
+Review pages & 37 clip pages + introduction page \\
+Public audio host & HuggingFace dataset repository \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Manual review rubric}
+\begin{tabular}{p{0.29\linewidth}p{0.58\linewidth}}
+\toprule
+\textbf{Question} & \textbf{Purpose} \\
+\midrule
+Audio clarity, 1--5 & Measures noise, music bleed, room tone, and general listenability. \\
+Speaker consistency & Checks whether the clip is single-speaker or has overlap/other speakers. \\
+Boundary quality & Captures cut starts, cut endings, incomplete sentences, clicks, and pops. \\
+Speech naturalness & Flags read-aloud, audiobook-style, synthetic, or heavily processed speech. \\
+Dominant emotion/register & Human check for neutral, excited, somber, frustrated, formal, casual, or expressive register. \\
+Final decision & Converts ratings into an actionable label: keep, keep after trim, reject, or second review. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At report time, the form had been created and verified, but a complete human response set had not yet been collected. I therefore do not report fabricated human acceptance rates or reviewer scores. The form is included as a reproducible review instrument, and the response sheet can be used later to compute keep rate, boundary-fix rate, mean clarity, and disagreement between heuristic emotion tags and human labels.
+
 \section{What Worked}
 
 \begin{itemize}
@@ -394,6 +439,8 @@ The most important negative result is also valuable: the enhancement stage did n
     \item Transcript similarity CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/asr_text_similarity.csv}{\texttt{analysis/before\_after\_metrics/asr\_text\_similarity.csv}}
     \item Low transcript similarity review CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/before_after_metrics/low_asr_similarity_review.csv}{\texttt{analysis/before\_after\_metrics/low\_asr\_similarity\_review.csv}}
     \item Emotion review CSV: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/analysis/emotion_tag_repair/emotion_manual_review_v2.csv}{\texttt{analysis/emotion\_tag\_repair/emotion\_manual\_review\_v2.csv}}
+    \item Manual review Google Form: \href{https://docs.google.com/forms/d/e/1FAIpQLSdWRh_ek1CADZmEORGfKX47R4YiNFZ44hmqzWTBAdvha5qeEA/viewform}{\texttt{Sarvam TTS Manual Review - 37 Clips}}
+    \item Manual review manifest: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/review_form/selected_37_review_manifest.csv}{\texttt{review\_form/selected\_37\_review\_manifest.csv}}
     \item Source list: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/sources/sources.jsonl}{\texttt{sources/sources.jsonl}}
     \item Iteration 1 audit: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/docs/iteration_1_audit_and_pipeline_hardening.md}{\texttt{docs/iteration\_1\_audit\_and\_pipeline\_hardening.md}}
     \item Final PDF report: \href{https://github.com/Rushabh333/sarvam-indian-tts-pipeline/blob/main/report/final_report.pdf}{\texttt{report/final\_report.pdf}}
