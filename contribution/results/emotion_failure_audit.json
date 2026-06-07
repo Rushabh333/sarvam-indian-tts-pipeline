@@ -1,0 +1,27 @@
+{
+  "segments": 188,
+  "total_minutes": 61.11,
+  "languages": {
+    "en-IN": 81,
+    "hi-IN": 107
+  },
+  "emotions": {
+    "sarcastic": 11,
+    "neutral": 46,
+    "excited": 10,
+    "formal": 73,
+    "concerned": 48
+  },
+  "styles": {
+    "expressive": 33,
+    "conversational": 46,
+    "authoritative": 70,
+    "formal": 39
+  },
+  "statuses": {
+    "heuristic_text_source_prosody_v2": 188
+  },
+  "empty_normalized_transcript": 0,
+  "emotion_review_required": 68,
+  "before_after_pairs": 188
+}

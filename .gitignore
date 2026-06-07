@@ -1,0 +1,84 @@
+# Data directories (too large for git)
+data/
+pretrained_models/
+_archive_run1_20260605_175640/
+archive_one/data/
+archive_one/raw/
+archive_one/final/
+archive_one/macro_chunks/
+archive_one/extracted_wav/
+archive_one/hf_export_data/
+archive_one/extracted_clips/
+
+# Environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Temporary
+*.tmp
+*.bak
+
+# Auto-generated entries
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Sensitive files (auto-detected)
+.env
+aws-gpu-key.pem
+youtube_cookies.txt
+
+# Packaged exports are regenerated locally and should not be source controlled.
+packaged_artifacts/*.zip

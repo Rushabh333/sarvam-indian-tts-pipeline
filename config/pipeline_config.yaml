@@ -1,0 +1,113 @@
+# ═══════════════════════════════════════════════════════════════
+# Sarvam TTS Dataset Pipeline — Configuration
+# ═══════════════════════════════════════════════════════════════
+
+audio:
+  sample_rate_processing: 16000   # 16kHz for all processing stages
+  sample_rate_final: 24000        # 24kHz for final delivery (LibriTTS standard)
+  channels: 1                     # Mono
+  bit_depth: 16                   # 16-bit PCM
+
+enhancement:
+  enabled: false                   # Set false to copy clean source audio without Demucs
+  model: "htdemucs_ft"            # Demucs v4 fine-tuned model
+  two_stems: true                 # Vocals only separation
+  rollback_on_degrade: true       # Keep original if enhancement hurts SNR
+
+extraction:
+  # Universal extraction works for all video types
+  keep_all_speakers: false        # true = interview/podcast mode (keep all)
+  merge_gap_s: 0.5                # Max gap to merge same-speaker segments
+  min_chunk_duration_s: 2.0       # Skip very short interjections
+  # Supported genres: talk, interview, comedy, skit, lecture, story, podcast, news, debate
+  # Genre is auto-detected from speaker distribution if not specified in sources.jsonl
+
+source_quality:
+  fail_on_hard_exclusion: true     # Stop before download if curated sources violate hard guardrails
+  min_pre_listen_quality: 4        # 1-5 human pre-listen quality score
+  min_dominant_speaker_pct: 80     # Prefer one primary speaker
+  min_video_duration_min: 5        # Ideal lower bound for source videos
+  max_video_duration_min: 45       # Longer videos are allowed only after manual review
+  reject_prohibited_source_types: true
+  prohibited_source_pattern: "audiobook|read[- ]?aloud|voiceover|voice[- ]?over|documentary|news|teleprompter|song|music video|karaoke|dubbed|dubbing|narration|asmr|panel discussion|debate|reaction video"
+
+segmentation:
+  min_duration_s: 3.0             # Minimum segment length
+  max_duration_s: 30.0            # Maximum segment length
+  vad_threshold: 0.5              # Silero VAD threshold
+  vad_min_speech_ms: 250          # Detect short speech events, then pack into TTS segments
+  merge_speech_gap_s: 0.8         # Merge nearby speech events into natural samples
+  min_silence_ms: 300             # Cut at pauses >= 300ms
+  speech_pad_ms: 30               # Tiny initial pad to avoid clipping
+  speech_ratio_min: 0.70          # Min ratio of speech to total duration
+
+dpbp:
+  proximity_threshold_ms: 150     # Truncation risk detection window
+  padding_stop_ms: 200            # Padding for stop consonants
+  padding_fricative_ms: 270       # Padding for fricatives
+  padding_nasal_ms: 300           # Padding for nasals
+  padding_vowel_ms: 350           # Padding for vowels/breathy phonation
+  padding_default_ms: 250         # Default padding
+  sentence_final_extra_ms: 50     # Extra padding for sentence-final words
+  zero_cross_search_ms: 50        # Zero-crossing snap window
+
+speaker_verification:
+  model: "speechbrain/spkrec-ecapa-voxceleb"
+  cosine_threshold: 0.85          # Stricter single-speaker purity threshold
+  num_reference_clips: 3          # Number of clips for reference embedding
+
+quality:
+  snr_db_min: 20.0                # Minimum SNR in dB
+  duration_min_s: 3.0             # Minimum duration
+  duration_max_s: 30.0            # Maximum duration
+
+content_guardrails:
+  reject_prohibited_source_types: true
+  prohibited_source_pattern: "audiobook|read[- ]?aloud|voiceover|voice[- ]?over|documentary|news|teleprompter|song|music video|karaoke|dubbed|dubbing|narration|asmr|panel discussion|debate|reaction video"
+  hi_latin_hard_max: 0.70         # Reject hi-IN when transcript is mostly Latin/English
+  en_devanagari_hard_max: 0.25    # Reject en-IN when transcript contains too much Devanagari
+  codemix_review_min: 0.20        # Flag mixed-script clips for manual review
+  min_transcript_words: 3
+  clipping_pct_max: 0.05
+  peak_dbfs_max: -0.1
+  active_ratio_min: 0.35
+  reject_mid_sentence_boundaries: false
+
+sarvam:
+  api_base: "https://api.sarvam.ai"
+  asr_model: "saaras:v3"
+  llm_model: "sarvam-105b"
+  batch_api_max_duration_s: 3600  # 1 hour max for batch API
+  rest_api_max_duration_s: 30     # 30s max for REST API
+
+finalize:
+  target_lufs: -23.0              # EBU R128 loudness standard
+  target_sr: 24000
+  true_peak_dbtp: -1.5            # True peak limit
+  lra: 11                         # Loudness range
+
+before_after:
+  export_raw_segments: true       # Creates matched raw clips for final before/after review
+  raw_segments_dir: "data/raw_segments"
+
+targets:
+  english_minutes: 30
+  hindi_minutes: 30
+  total_minutes: 60
+
+hf:
+  repo_name: "sarvam-indian-tts-60min"
+  # Full repo ID will be: {HF_USERNAME}/{repo_name}
+
+paths:
+  raw: "data/raw"
+  enhanced: "data/enhanced"
+  transcripts: "data/transcripts"
+  macro_chunks: "data/macro_chunks"
+  segments: "data/segments"
+  dpbp_segments: "data/dpbp_segments"
+  verified: "data/verified"
+  filtered: "data/filtered"
+  final: "data/final"
+  raw_segments: "data/raw_segments"
+  metadata: "data/metadata"

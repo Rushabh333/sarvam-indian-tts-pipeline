@@ -1,0 +1,26 @@
+{
+  "rows": 188,
+  "before_emotion_distribution": {
+    "sarcastic": 11,
+    "neutral": 57,
+    "concerned": 59,
+    "formal": 26,
+    "excited": 35
+  },
+  "after_emotion_distribution": {
+    "sarcastic": 11,
+    "neutral": 46,
+    "excited": 10,
+    "formal": 73,
+    "concerned": 48
+  },
+  "style_distribution": {
+    "expressive": 33,
+    "conversational": 46,
+    "authoritative": 70,
+    "formal": 39
+  },
+  "changed_rows": 57,
+  "review_required": 68,
+  "mean_confidence": 0.44750904255319146
+}

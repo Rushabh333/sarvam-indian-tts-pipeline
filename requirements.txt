@@ -1,0 +1,45 @@
+# Core audio processing
+yt-dlp>=2024.1.0
+pytubefix>=9.0.0
+soundfile>=0.12.0
+librosa>=0.10.0
+pydub>=0.25.0
+
+# Enhancement (GPU recommended)
+demucs>=4.0.0
+
+# VAD
+silero-vad>=5.0
+
+# Speaker verification (GPU recommended)
+speechbrain>=1.0.0
+faster-whisper>=1.2.1
+
+# Sarvam AI SDK
+sarvamai>=0.1.0
+
+# ML / Torch
+torch>=2.0.0
+torchaudio>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.4.0
+
+# HuggingFace
+huggingface_hub>=0.20.0
+datasets>=2.16.0
+
+# Config & environment
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Text processing
+indic-nlp-library>=0.92
+
+# Prosody (optional, for detailed analysis)
+praat-parselmouth>=0.4.0
+
+# Utilities
+tqdm>=4.65.0
+matplotlib>=3.10.0
+pyloudnorm>=0.2.0
